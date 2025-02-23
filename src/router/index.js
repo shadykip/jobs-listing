@@ -5,6 +5,8 @@ import FourOFourView from "@/views/FourOFourView.vue";
 import JobView from "@/views/JobView.vue";
 import AddJobView from "@/views/AddJobView.vue";
 import EditJob from "@/views/EditJob.vue";
+import LoginView from "@/views/LoginView.vue";
+import SignupView from "@/views/SignupView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.Base_URL),
@@ -33,6 +35,16 @@ const router = createRouter({
             path:'/jobs/edit/:id',
             name: 'edit-job',
             component: EditJob
+        },
+        {
+            path:'/auth/login',
+            name: 'login',
+            component: LoginView
+        },
+        {
+            path:'/auth/signup',
+            name: 'signup',
+            component: SignupView 
         },
         {
             path: '/:catchAll(.*)*',

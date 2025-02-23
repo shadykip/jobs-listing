@@ -36,6 +36,14 @@ import {RouterLink,useRoute} from 'vue-router'
                   to="/jobs/add"
                  :class="[isLinkActive('/jobs/add')? 'bg-green-900' : 'hover:bg-green-900','text-white','hover:text-white', 'rounded-md', 'px-3', 'py-2' ]"
                   >Add Job</RouterLink>
+                  <RouterLink
+                  to="/auth/login"
+                 :class="[isLinkActive('/auth/login')? 'bg-green-900' : 'hover:bg-green-900','text-white','hover:text-white', 'rounded-md', 'px-3', 'py-2' ]"
+                  >Login</RouterLink>
+                  <RouterLink
+                  to="/auth/signup"
+                 :class="[isLinkActive('/auth/signup')? 'bg-green-900' : 'hover:bg-green-900','text-white','hover:text-white', 'rounded-md', 'px-3', 'py-2' ]"
+                  >Signup</RouterLink>
               </div>
             </div>
           </div>
