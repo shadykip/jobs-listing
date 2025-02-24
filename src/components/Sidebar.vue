@@ -19,28 +19,26 @@ const navLinkClasses = (path) => [
     "px-3",
     "py-2",
 ];
-const toggleSidebar=()=>{
-navStore.toggleDrawer()
-console.log(navStore.drawerState)
+const toggleSidebar = () => {
+    const status = navStore.isDrawerOpen
+    navStore.toggleDrawer(!status);
 }
 </script>
 <template>
     <!-- Sidebar for dashboard -->
-    <aside 
-    :class="[
+    <aside :class="[
         'bg-green-800 text-white h-full md:p-4  fixed md:static',
-        navStore.isDrawerOpen ? 'w-64 ' : 'w-0 ',
+        navStore.isDrawerOpen ? 'w-64' : 'w-0',
         'overflow-hidden transition-all duration-300'
-      ]"
-    v-if="isDashboard" class="w-64 bg-green-800 text-white h-full md:p-4">
+    ]" v-if="isDashboard" class="bg-green-800 text-white h-full md:p-4">
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="text-2xl font-bold p-4 mb-4">Dashboard</h2>
             </div>
             <div class="md:hidden">
                 <button @click="toggleSidebar" class="mr-3 p-4 mb-4">
-                <i class="pi pi-times"></i>
-            </button>
+                    <i class="pi pi-times"></i>
+                </button>
             </div>
         </div>
         <nav class="flex flex-col p-4 space-y-2">

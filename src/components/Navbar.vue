@@ -28,8 +28,9 @@ const navLinkClasses = (path) => {
 const isDashboard = computed(() => route.path.startsWith("/dashboard"));
 
 const toggleSidebar=()=>{
-navStore.toggleDrawer()
-console.log(navStore.drawerState)
+  const status = navStore.isDrawerOpen
+    navStore.toggleDrawer(status ? status : !status);
+    console.log(navStore.drawerState)
 }
 
 

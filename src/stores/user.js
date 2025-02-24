@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { auth,signInWithEmailAndPassword,signOut,onAuthStateChanged } from "@/firebase";
+import router from "@/router";
 export const useUserStore = defineStore("user",{
     state:()=>({
         user:JSON.parse(localStorage.getItem("user")) || null,
@@ -28,6 +29,7 @@ export const useUserStore = defineStore("user",{
                 await signOut(auth);
                 this.user = null;
                 localStorage.removeItem("user");
+                router.push("/auth/login");
             } catch (error) {
                 this.error = error.message;
               } finally {

@@ -5,8 +5,8 @@ export const useNavStore = defineStore('nav',{
         isDrawerOpen:window.innerWidth >= 768,
     }),
     actions:{
-        toggleDrawer(){
-            this.isDrawerOpen =!this.isDrawerOpen;
+        toggleDrawer(status){
+            this.isDrawerOpen = status;
         },
         checkScreenSize() {
             this.isDrawerOpen = window.innerWidth >= 768;
