@@ -103,7 +103,7 @@ const isLinkActive = (routeName) => {
 
 
   <!-- Dashboard Topbar -->
-  <nav class="bg-gray-100 sm:bg-green-800 border-b border-gray-300 p-4 flex items-center justify-between md:justify-end shadow-sm">
+  <nav v-if="isDashboard" class="bg-gray-100 border-b  border-gray-300 p-4 flex items-center justify-between md:justify-end shadow-sm">
     <!-- Hamburger Button -->
     <button @click="toggleSidebar" class="text-gray-700 md:hidden">
       <i class="pi pi-bars text-2xl"></i>

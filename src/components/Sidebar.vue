@@ -37,7 +37,7 @@ console.log(navStore.drawerState)
             <div>
                 <h2 class="text-2xl font-bold p-4 mb-4">Dashboard</h2>
             </div>
-            <div>
+            <div class="md:hidden">
                 <button @click="toggleSidebar" class="mr-3 p-4 mb-4">
                 <i class="pi pi-times"></i>
             </button>
