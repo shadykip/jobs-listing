@@ -1,14 +1,16 @@
 <script setup>
 import { RouterLink, useRoute } from 'vue-router'
-import logo from '@/assets/img/logo.png'
+
 import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/user';
-import { useNavStore } from '@/stores/nav';
+import { useNavStore } from '@/stores/nav'
+import Logo from './Logo.vue';
 
 const userStore = useUserStore();
 const route = useRoute()
 const menuOpen = ref(false);
 const navStore = useNavStore()
+
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
@@ -30,13 +32,10 @@ const isDashboard = computed(() => route.path.startsWith("/dashboard"));
 const toggleSidebar=()=>{
   const status = navStore.isDrawerOpen
     navStore.toggleDrawer(status ? status : !status);
-    console.log(navStore.drawerState)
 }
-
-
-const isLinkActive = (routeName) => {
-
-  return route.path === routeName
+const handleLogout = () => {
+  userStore.logout()
+  toggleMenu();
 }
 </script>
 
@@ -53,10 +52,7 @@ const isLinkActive = (routeName) => {
             <button @click="toggleMenu" class="md:hidden text-white">
               ☰
             </button>
-            <RouterLink to="/" class="flex items-center">
-              <img class="h-10 w-auto" :src="logo" alt="Vue Jobs" />
-              <span class="hidden md:block text-white text-2xl font-bold ml-2">Vue Jobs</span>
-            </RouterLink>
+            <Logo brand="Vue Jobs"/>
           </div>
 
           <!-- Desktop Navigation -->
@@ -86,16 +82,16 @@ const isLinkActive = (routeName) => {
       <nav class="flex flex-col space-y-4 mt-8">
         <RouterLink to="/" :class="navLinkClasses('/')">Home</RouterLink>
         <RouterLink to="/jobs" :class="navLinkClasses('/jobs')">Jobs</RouterLink>
-        <RouterLink v-if="userStore.isAuthenticated" to="/jobs/add" :class="navLinkClasses('/jobs/add')">
+        <RouterLink @click="toggleMenu" v-if="userStore.isAuthenticated" to="/jobs/add" :class="navLinkClasses('/jobs/add')">
           Add Job
         </RouterLink>
-        <RouterLink v-if="!userStore.isAuthenticated" to="/auth/login" :class="navLinkClasses('/auth/login')">
+        <RouterLink @click="toggleMenu" v-if="!userStore.isAuthenticated" to="/auth/login" :class="navLinkClasses('/auth/login')">
           Login
         </RouterLink>
-        <RouterLink v-if="!userStore.isAuthenticated" to="/auth/signup" :class="navLinkClasses('/auth/signup')">
+        <RouterLink @click="toggleMenu" v-if="!userStore.isAuthenticated" to="/auth/signup" :class="navLinkClasses('/auth/signup')">
           Signup
         </RouterLink>
-        <button v-if="userStore.isAuthenticated" @click="userStore.logout" class="bg-green-700 px-4 py-2 rounded-md">
+        <button v-if="userStore.isAuthenticated" @click="handleLogout" class="bg-green-700 px-4 py-2 rounded-md">
           Logout
         </button>
       </nav>

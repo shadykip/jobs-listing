@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { useUserStore } from '@/stores/user';
 import { useRoute } from "vue-router";
 import { useNavStore } from "@/stores/nav";
-
+import Logo from "./Logo.vue";
 const userStore = useUserStore();
 const navStore = useNavStore();
 const route = useRoute();
@@ -32,8 +32,9 @@ const toggleSidebar = () => {
         'overflow-hidden transition-all duration-300'
     ]" v-if="isDashboard" class="bg-green-800 text-white h-full md:p-4">
         <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-2xl font-bold p-4 mb-4">Dashboard</h2>
+            <div class="p-4 mb-4">
+                <Logo brand="Vue Jobs" />
+                <!-- <h2 class="text-2xl font-bold p-4 mb-4">Dashboard</h2> -->
             </div>
             <div class="md:hidden">
                 <button @click="toggleSidebar" class="mr-3 p-4 mb-4">
