@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut } from "firebase/auth";
 import { getFirestore, doc, setDoc,collection } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -20,4 +20,6 @@ const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-export {analytics, auth,db,setDoc,doc,collection, createUserWithEmailAndPassword };
+// Detect if a user is already logged in
+
+export {analytics, auth,db,setDoc,doc,collection, createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut };

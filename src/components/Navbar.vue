@@ -1,6 +1,9 @@
 <script setup>
 import {RouterLink,useRoute} from 'vue-router'
  import logo from '@/assets/img/logo.png'
+ import { useUserStore } from '@/stores/user';
+
+ const userStore = useUserStore();
 
  const isLinkActive = (routeName) => {
   const route = useRoute()
@@ -33,10 +36,12 @@ import {RouterLink,useRoute} from 'vue-router'
                   :class="[isLinkActive('/jobs')? 'bg-green-900' : 'hover:bg-green-900','text-white','hover:text-white', 'rounded-md', 'px-3', 'py-2' ]"
                   >Jobs</RouterLink>
                 <RouterLink
+                v-if="userStore.isAuthenticated"
                   to="/jobs/add"
                  :class="[isLinkActive('/jobs/add')? 'bg-green-900' : 'hover:bg-green-900','text-white','hover:text-white', 'rounded-md', 'px-3', 'py-2' ]"
                   >Add Job</RouterLink>
-                  <RouterLink
+                  <span v-if="!userStore.isAuthenticated" :class="['px-3', 'py-2']">
+                    <RouterLink
                   to="/auth/login"
                  :class="[isLinkActive('/auth/login')? 'bg-green-900' : 'hover:bg-green-900','text-white','hover:text-white', 'rounded-md', 'px-3', 'py-2' ]"
                   >Login</RouterLink>
@@ -44,6 +49,10 @@ import {RouterLink,useRoute} from 'vue-router'
                   to="/auth/signup"
                  :class="[isLinkActive('/auth/signup')? 'bg-green-900' : 'hover:bg-green-900','text-white','hover:text-white', 'rounded-md', 'px-3', 'py-2' ]"
                   >Signup</RouterLink>
+                  </span>
+                  <span v-else :class="['px-3', 'py-2']">
+                    <button @click="userStore.logout" class=" hover:bg-green-800 text-white font-bold  px-3 rounded-md">Logout</button>
+                  </span>
               </div>
             </div>
           </div>
