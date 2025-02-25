@@ -1,4 +1,4 @@
 export  const config={
-    API_URL:"http://localhost:8000/api"
+    API_URL:"https://joblisting-main-kaakyo.laravel.cloud/api"
 }
 
