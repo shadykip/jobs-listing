@@ -1,0 +1,1 @@
+import{u as a,o,c as r,a as t}from"./index-ClufwBiT.js";const u={__name:"DashboardView",setup(s){const e=a();return o(()=>{e.toggleDrawer(!1)}),(n,c)=>(t(),r("h1",null,"Dashboard"))}};export{u as default};
