@@ -21,9 +21,11 @@ onMounted(() => {
     <div class="flex h-screen">
         <Sidebar/>
         <!-- Main Content -->
-        <div class="flex-1">
+        <div class="flex-1 md:ml-64">
             <Navbar />
-            <RouterView />
+            <div class="p-4">
+                <RouterView />
+            </div>
         </div>
 
     </div>

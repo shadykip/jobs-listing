@@ -1,218 +1,166 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import axios from 'axios';
+
 const router = useRouter();
 const toast = useToast();
 
+// Form State
 const form = reactive({
-    type:"Full-Time",
-    name:"",
-    description:'',
-    salary:'',
-    location:'',
-    company:{
-        name:'',
-        description:'',
-        contactEmail:'',
-        contactPhone:""
-    }
-})
-const handleSubmit=async (e) => {
-  const newJob = {
-    type: form.type,
-    description: form.description,
-    salary: form.salary,
-    location: form.location,
+    type: "Full-Time",
+    title: "",
+    category: "",
+    description: "",
+    vacancies: "",
+    salary: "",
+    deadline: "",
+    location: "",
     company: {
-      name: form.company.name,
-      description: form.company.description,
-      contactEmail: form.company.contactEmail,
-      contactPhone: form.company.contactPhone
+        name: "",
+        description: "",
+        contactEmail: "",
+        contactPhone: "",
+        logo: null,
     }
-  }
-  try {
-    //usea axios to send the new job to the server
-    const response = await axios.post('/api/jobs', newJob);
-    toast.success('Job added successfully!');
-    router.push(`/jobs/${response.data.id} `);
-  } catch (error) {
-    toast.error('Error adding job. Please try again later.');
-  }
-}
+});
+
+// Error State
+const errors = reactive({});
+
+// Validation Function
+const validateForm = () => {
+    errors.title = !form.title ? "Job title is required" : "";
+    errors.category = !form.category ? "Category is required" : "";
+    errors.description = !form.description ? "Description is required" : "";
+    errors.vacancies = !form.vacancies ? "Vacancies are required" : "";
+    errors.salary = !form.salary ? "Salary is required" : "";
+    errors.deadline = !form.deadline ? "Deadline is required" : "";
+    errors.location = !form.location ? "Location is required" : "";
+
+    errors.companyName = !form.company.name ? "Company name is required" : "";
+    errors.companyDescription = !form.company.description ? "Company description is required" : "";
+    errors.contactEmail = !form.company.contactEmail ? "Contact email is required" : "";
+    errors.contactPhone = !form.company.contactPhone ? "Contact phone is required" : "";
+    errors.logo = !form.company.logo ? "Company logo is required" : "";
+
+    // Check if there are any errors
+    return Object.values(errors).every(error => !error);
+};
+
+// Handle File Upload
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    form.company.logo = file ? file : null;
+};
+
+// Handle Form Submission
+const handleSubmit = async () => {
+    if (!validateForm()) {
+        toast.error("Please correct the errors before submitting.");
+        return;
+    }
+
+    // Prepare FormData for file upload
+    const formData = new FormData();
+    formData.append("type", form.type);
+    formData.append("title", form.title);
+    formData.append("category", form.category);
+    formData.append("description", form.description);
+    formData.append("vacancies", form.vacancies);
+    formData.append("salary", form.salary);
+    formData.append("deadline", form.deadline);
+    formData.append("location", form.location);
+    formData.append("company[name]", form.company.name);
+    formData.append("company[description]", form.company.description);
+    formData.append("company[contactEmail]", form.company.contactEmail);
+    formData.append("company[contactPhone]", form.company.contactPhone);
+    if (form.company.logo) {
+        formData.append("company[logo]", form.company.logo);
+    }
+
+    try {
+        const response = await axios.post('/api/jobs', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        toast.success('Job added successfully!');
+        router.push(`/jobs/${response.data.id}`);
+    } catch (error) {
+        toast.error(error.response?.data?.message || 'Error adding job. Please try again.');
+    }
+};
 </script>
+
 <template>
-      <section class="bg-green-50">
-      <div class="container m-auto max-w-2xl py-24">
-        <div
-          class="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"
-        >
-          <form @submit.prevent="handleSubmit">
-            <h2 class="text-3xl text-center font-semibold mb-6">Add Job</h2>
+    <section class="bg-green-50">
+        <div class="container m-auto max-w-2xl py-24">
+            <div class="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
+                <form @submit.prevent="handleSubmit">
+                    <h2 class="text-3xl text-center font-semibold mb-6">Add Job</h2>
 
-            <div class="mb-4">
-              <label for="type" class="block text-gray-700 font-bold mb-2"
-                >Job Type</label
-              >
-              <select
-                id="type"
-                name="type"
-                v-model="form.type"
-                class="border rounded w-full py-2 px-3"
-                required
-              >
-                <option value="Full-Time">Full-Time</option>
-                <option value="Part-Time">Part-Time</option>
-                <option value="Remote">Remote</option>
-                <option value="Internship">Internship</option>
-              </select>
-            </div>
+                    <div class="mb-4">
+                        <label for="type" class="block text-gray-700 font-bold mb-2">Job Type</label>
+                        <select id="type" v-model="form.type" class="border rounded w-full py-2 px-3">
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Part-Time">Part-Time</option>
+                            <option value="Remote">Remote</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                    </div>
 
-            <div class="mb-4">
-              <label class="block text-gray-700 font-bold mb-2"
-                >Job Listing Name</label
-              >
-              <input
-                type="text"
-                id="name"
-                v-model="form.name"
-                name="name"
-                class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. Beautiful Apartment In Miami"
-                required
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="description"
-                class="block text-gray-700 font-bold mb-2"
-                >Description</label
-              >
-              <textarea
-                id="description"
-                v-model="form.description"
-                name="description"
-                class="border rounded w-full py-2 px-3"
-                rows="4"
-                placeholder="Add any job duties, expectations, requirements, etc"
-              ></textarea>
-            </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2">Job Title</label>
+                        <input type="text" v-model="form.title" class="border rounded w-full py-2 px-3 mb-2" placeholder="e.g. Software Developer" />
+                        <p v-if="errors.title" class="text-red-500">{{ errors.title }}</p>
+                    </div>
 
-            <div class="mb-4">
-              <label for="type" class="block text-gray-700 font-bold mb-2"
-                >Salary</label
-              >
-              <select
-                id="salary"
-                v-model="form.salary"
-                name="salary"
-                class="border rounded w-full py-2 px-3"
-                required
-              >
-                <option value="Under $50K">under $50K</option>
-                <option value="$50K - $60K">$50 - $60K</option>
-                <option value="$60K - $70K">$60 - $70K</option>
-                <option value="$70K - $80K">$70 - $80K</option>
-                <option value="$80K - $90K">$80 - $90K</option>
-                <option value="$90K - $100K">$90 - $100K</option>
-                <option value="$100K - $125K">$100 - $125K</option>
-                <option value="$125K - $150K">$125 - $150K</option>
-                <option value="$150K - $175K">$150 - $175K</option>
-                <option value="$175K - $200K">$175 - $200K</option>
-                <option value="Over $200K">Over $200K</option>
-              </select>
-            </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2">Job Category</label>
+                        <input type="text" v-model="form.category" class="border rounded w-full py-2 px-3 mb-2" placeholder="e.g. IT & Networking" />
+                        <p v-if="errors.category" class="text-red-500">{{ errors.category }}</p>
+                    </div>
 
-            <div class="mb-4">
-              <label class="block text-gray-700 font-bold mb-2">
-                Location
-              </label>
-              <input
-                type="text"
-                id="location"
-                name="location"
-                v-model="form.location"
-                class="border rounded w-full py-2 px-3 mb-2"
-                placeholder="Company Location"
-                required
-              />
-            </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2">Description</label>
+                        <textarea v-model="form.description" class="border rounded w-full py-2 px-3" rows="4"></textarea>
+                        <p v-if="errors.description" class="text-red-500">{{ errors.description }}</p>
+                    </div>
 
-            <h3 class="text-2xl mb-5">Company Info</h3>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2">Vacancies</label>
+                        <input type="number" v-model="form.vacancies" class="border rounded w-full py-2 px-3 mb-2" />
+                        <p v-if="errors.vacancies" class="text-red-500">{{ errors.vacancies }}</p>
+                    </div>
 
-            <div class="mb-4">
-              <label for="company" class="block text-gray-700 font-bold mb-2"
-                >Company Name</label
-              >
-              <input
-                type="text"
-                id="company"
-                v-model="form.company.name"
-                name="company"
-                class="border rounded w-full py-2 px-3"
-                placeholder="Company Name"
-              />
-            </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2">Deadline</label>
+                        <input type="date" v-model="form.deadline" class="border rounded w-full py-2 px-3 mb-2" />
+                        <p v-if="errors.deadline" class="text-red-500">{{ errors.deadline }}</p>
+                    </div>
 
-            <div class="mb-4">
-              <label
-                for="company_description"
-                class="block text-gray-700 font-bold mb-2"
-                >Company Description</label
-              >
-              <textarea
-                id="company_description"
-                v-model="form.company.description"
-                name="company_description"
-                class="border rounded w-full py-2 px-3"
-                rows="4"
-                placeholder="What does your company do?"
-              ></textarea>
-            </div>
+                    <h3 class="text-2xl mb-5">Company Info</h3>
 
-            <div class="mb-4">
-              <label
-                for="contact_email"
-                class="block text-gray-700 font-bold mb-2"
-                >Contact Email</label
-              >
-              <input
-                type="email"
-                id="contact_email"
-                v-model="form.company.contactEmail"
-                name="contact_email"
-                class="border rounded w-full py-2 px-3"
-                placeholder="Email address for applicants"
-                required
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="contact_phone"
-                class="block text-gray-700 font-bold mb-2"
-                >Contact Phone</label
-              >
-              <input
-                type="tel"
-                id="contact_phone"
-                v-model="form.company.contactPhone"
-                name="contact_phone"
-                class="border rounded w-full py-2 px-3"
-                placeholder="Optional phone for applicants"
-              />
-            </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2">Company Name</label>
+                        <input type="text" v-model="form.company.name" class="border rounded w-full py-2 px-3" />
+                        <p v-if="errors.companyName" class="text-red-500">{{ errors.companyName }}</p>
+                    </div>
 
-            <div>
-              <button
-                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
-                type="submit"
-              >
-                Add Job
-              </button>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2">Company Logo</label>
+                        <input type="file" @change="handleFileChange" class="border rounded w-full py-2 px-3" />
+                        <p v-if="errors.logo" class="text-red-500">{{ errors.logo }}</p>
+                    </div>
+
+                    <div>
+                        <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full">Add Job</button>
+                    </div>
+                </form>
             </div>
-          </form>
         </div>
-      </div>
     </section>
 </template>

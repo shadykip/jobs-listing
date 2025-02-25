@@ -28,11 +28,6 @@ const router = createRouter({
             component:JobView
         },
         {
-            path:'/jobs/add',
-            name: 'add-job',
-            component: AddJobView
-        },
-        {
             path:'/jobs/edit/:id',
             name: 'edit-job',
             component: EditJob
@@ -50,6 +45,17 @@ const router = createRouter({
         {
             path:"/dashboard",
             component: () => import('@/views/DashboardView.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
+            path:"/dashboard/profile",
+            component: () => import('@/views/ProfileView.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
+            path:'/dashboard/add-job',
+            name: 'add-job',
+            component: AddJobView,
             meta: { requiresAuth: true }
         },
         {

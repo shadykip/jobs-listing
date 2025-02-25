@@ -8,6 +8,7 @@ const userStore = useUserStore();
 const navStore = useNavStore();
 const route = useRoute();
 
+
 // Determine if the user is on dashboard routes
 const isDashboard = computed(() => route.path.startsWith("/dashboard"));
 
@@ -23,11 +24,12 @@ const toggleSidebar = () => {
     const status = navStore.isDrawerOpen
     navStore.toggleDrawer(!status);
 }
+
 </script>
 <template>
     <!-- Sidebar for dashboard -->
     <aside :class="[
-        'bg-green-800 text-white h-full md:p-4  fixed md:static',
+        'bg-green-800 text-white h-full md:p-4  fixed md:fixed',
         navStore.isDrawerOpen ? 'w-64' : 'w-0',
         'overflow-hidden transition-all duration-300'
     ]" v-if="isDashboard" class="bg-green-800 text-white h-full md:p-4">
@@ -43,10 +45,14 @@ const toggleSidebar = () => {
             </div>
         </div>
         <nav class="flex flex-col p-4 space-y-2">
-            <RouterLink to="/dashboard" :class="navLinkClasses('/dashboard')">Dashboard</RouterLink>
-            <RouterLink to="/dashboard/jobs" :class="navLinkClasses('/dashboard/my-profile')">My Profile</RouterLink>
-            <RouterLink to="/dashboard/jobs" :class="navLinkClasses('/dashboard/jobs')">My Jobs</RouterLink>
-            <RouterLink to="/dashboard/settings" :class="navLinkClasses('/dashboard/settings')">Settings</RouterLink>
+            <RouterLink @click="toggleSidebar" to="/dashboard" :class="navLinkClasses('/dashboard')">Dashboard</RouterLink>
+            <RouterLink @click="toggleSidebar" to="/dashboard/profile" :class="navLinkClasses('/dashboard/profile')">Profile</RouterLink>
+            <RouterLink @click="toggleSidebar" to="/dashboard/add-job" :class="navLinkClasses('/dashboard/add-job')">Submit Job</RouterLink>
+            <RouterLink @click="toggleSidebar" to="/dashboard/jobs" :class="navLinkClasses('/dashboard/jobs')">My Jobs</RouterLink>
+            <RouterLink @click="toggleSidebar" to="/dashboard/jobs/applicants" :class="navLinkClasses('/dashboard/jobs/applicants')">Job Applicants</RouterLink>
+            <RouterLink @click="toggleSidebar" to="/dashboard/jobs/shortlist" :class="navLinkClasses('/dashboard/jobs/shortlist')">Candidate Shortlist</RouterLink>
+            <RouterLink @click="toggleSidebar" to="/dashboard/employees" :class="navLinkClasses('/dashboard/employees')">Employees</RouterLink>
+            <RouterLink @click="toggleSidebar" to="/dashboard/settings" :class="navLinkClasses('/dashboard/settings')">Settings</RouterLink>
             <button @click="userStore.logout" class="bg-green-700 px-4 py-2 rounded-md">Logout</button>
         </nav>
     </aside>
