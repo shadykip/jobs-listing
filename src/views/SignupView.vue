@@ -6,6 +6,8 @@ import { auth, createUserWithEmailAndPassword, collection, setDoc, doc, db } fro
 import { useToast } from 'vue-toastification';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import { useUserStore } from '@/stores/user';
+import axios from 'axios';
+import { config } from '@/config';
 
 
 
@@ -44,17 +46,26 @@ const handleSignup = async () => {
       avatar: "avatar.jpg",
       password: state.user.password,
     }
-
-    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
-    console.log('User signed up:', userCredential.user);
-    // Store user data in Firestore
-    await setDoc(doc(collection(db, "users"), userCredential.user.uid), userData);
-    toast.success('User signed up successfully');
+    userData.name = state.user.firstname+' '+state.user.lastname
+    console.log(userData)
+    const response = await axios.post(`${config.API_URL}/auth/register`, userData);
+    const resp = response.data;
     state.isLoading = false;
-    router.push('/auth/login');
+    console.log(resp)
+    if(resp.status==='success'){
+      toast.success('User signed up successfully');
+      router.push('/auth/login')
+    }else{
+      toast.error('Failed to sign up',resp.message);
+    }
+
+    // const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+    // console.log('User signed up:', userCredential.user);
+    // // Store user data in Firestore
+    // await setDoc(doc(collection(db, "users"), userCredential.user.uid), userData);;
   } catch (error) {
     console.error('Error signing up user:', error);
-    toast.error('Error signing up user:', error);
+    toast.error(error.message);
     state.isLoading = false;
   }
 }

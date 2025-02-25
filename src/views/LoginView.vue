@@ -26,7 +26,7 @@ const handleLogin = async () => {
 
     try {
         await userStore.login(state.user.email, state.user.password);
-        console.log(userStore.user)
+        console.log(userStore)
         if (userStore.isAuthenticated) {
             router.push("/dashboard"); // Navigate to Dashboard after successful login
         }

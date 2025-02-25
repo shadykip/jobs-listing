@@ -58,10 +58,7 @@ const handleLogout = () => {
           <!-- Desktop Navigation -->
           <div class="hidden md:flex space-x-2">
             <RouterLink to="/" :class="navLinkClasses('/')">Home</RouterLink>
-            <RouterLink to="/jobs" :class="navLinkClasses('/jobs')">Jobs</RouterLink>
-            <RouterLink v-if="userStore.isAuthenticated" to="/jobs/add" :class="navLinkClasses('/jobs/add')">
-              Add Job
-            </RouterLink>
+            <RouterLink to="/jobs" :class="navLinkClasses('/jobs')">Browse Jobs</RouterLink>
             <span class="px-3 py-2" v-if="!userStore.isAuthenticated">
               <RouterLink to="/auth/login" :class="navLinkClasses('/auth/login')">Login</RouterLink>
               <RouterLink to="/auth/signup" :class="navLinkClasses('/auth/signup')">Signup</RouterLink>
@@ -80,9 +77,9 @@ const handleLogout = () => {
     <div v-if="menuOpen" class="fixed inset-0 bg-green-800 text-white w-64 h-full p-4 z-50 md:hidden">
       <button @click="toggleMenu" class="absolute top-4 right-4">✖</button>
       <nav class="flex flex-col space-y-4 mt-8">
-        <RouterLink to="/" :class="navLinkClasses('/')">Home</RouterLink>
-        <RouterLink to="/jobs" :class="navLinkClasses('/jobs')">Jobs</RouterLink>
-        <RouterLink @click="toggleMenu" v-if="userStore.isAuthenticated" to="/jobs/add" :class="navLinkClasses('/jobs/add')">
+        <RouterLink @click="toggleMenu" to="/" :class="navLinkClasses('/')">Home</RouterLink>
+        <RouterLink @click="toggleMenu" to="/jobs" :class="navLinkClasses('/jobs')">Browse Jobs</RouterLink>
+        <RouterLink @click="toggleMenu" v-if="userStore.isAuthenticated" to="/dashboard/add-job" :class="navLinkClasses('/jobs/add')">
           Add Job
         </RouterLink>
         <RouterLink @click="toggleMenu" v-if="!userStore.isAuthenticated" to="/auth/login" :class="navLinkClasses('/auth/login')">
